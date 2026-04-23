@@ -294,6 +294,23 @@
     .faq-a.open { display: block; }
 
     /* ── FOOTER ── */
+    .compat-warning {
+      margin-top: 20px;
+      background: #1a1206;
+      border: 1px solid #78350f;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 0.85rem;
+      color: #fbbf24;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      text-align: left;
+      line-height: 1.6;
+    }
+    .compat-warning svg { flex-shrink: 0; margin-top: 2px; }
+    .compat-warning strong { color: #fde68a; }
+
     footer {
       text-align: center;
       padding: 32px 24px 48px;
@@ -313,10 +330,17 @@
   <h1>iPogo <span>Installer</span></h1>
   <p>Instale o iPogo no seu iPhone direto do Linux — simples e rápido</p>
   <div class="badges">
-    <span class="badge">Linux x86_64</span>
+    <span class="badge">🐧 Linux x86_64</span>
     <span class="badge">Ubuntu / Debian</span>
+    <span class="badge">📱 iPhone / iPad (iOS)</span>
     <span class="badge">Com suporte a 2FA</span>
     <span class="badge">Gratuito</span>
+  </div>
+
+  <div class="compat-warning">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    Funciona apenas em <strong>Linux (Ubuntu/Debian)</strong> instalando no <strong>iPhone ou iPad</strong>.<br/>
+    Não é compatível com Windows, macOS, Android ou outros dispositivos.
   </div>
 </div>
 
