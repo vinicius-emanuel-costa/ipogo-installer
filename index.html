@@ -1,247 +1,532 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iPogo Installer</title>
-  <link rel="icon" type="image/png" href="icon.png" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>iPogo Installer — Linux</title>
+  <link rel="icon" type="image/png" href="icon.png"/>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0a18;
+      --surface: #11112a;
+      --card:    #18183a;
+      --border:  #2a2a50;
+      --purple:  #7c3aed;
+      --purple2: #6d28d9;
+      --accent:  #818cf8;
+      --green:   #22c55e;
+      --yellow:  #f59e0b;
+      --white:   #f1f5f9;
+      --muted:   #64748b;
+      --soft:    #94a3b8;
+    }
 
     body {
-      background: #0d0d1a;
-      color: #f1f5f9;
-      font-family: 'Segoe UI', sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
     }
 
-    .card {
-      background: #13132b;
-      border: 1px solid #252545;
-      border-radius: 16px;
-      padding: 48px 40px;
-      max-width: 480px;
-      width: 100%;
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ── HERO ── */
+    .hero {
       text-align: center;
+      padding: 72px 24px 56px;
+      max-width: 640px;
+      margin: 0 auto;
     }
-
-    .logo {
-      width: 88px;
-      height: 88px;
-      border-radius: 20px;
+    .hero img {
+      width: 96px; height: 96px;
+      border-radius: 22px;
       margin-bottom: 24px;
+      box-shadow: 0 0 40px #7c3aed55;
     }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 4px;
+    .hero h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      letter-spacing: -0.5px;
     }
-    h1 span { color: #818cf8; }
-
-    .subtitle {
-      color: #64748b;
-      font-size: 0.95rem;
-      margin-bottom: 32px;
+    .hero h1 span { color: var(--accent); }
+    .hero p {
+      color: var(--soft);
+      font-size: 1.05rem;
+      margin-top: 10px;
     }
-
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      margin-top: 20px;
+    }
     .badge {
-      display: inline-block;
-      background: #1a1a38;
-      border: 1px solid #252545;
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 999px;
       padding: 4px 14px;
       font-size: 0.78rem;
-      color: #818cf8;
-      margin-bottom: 32px;
+      color: var(--soft);
     }
 
-    .btn-download {
+    /* ── DOWNLOAD BOX ── */
+    .dl-box {
+      max-width: 580px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+    .dl-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+    }
+    .dl-card h2 {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .btn-dl {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      background: #7c3aed;
+      background: var(--purple);
       color: #fff;
       font-size: 1rem;
       font-weight: 700;
-      border: none;
       border-radius: 10px;
-      padding: 16px 32px;
-      cursor: pointer;
-      text-decoration: none;
+      padding: 16px;
       width: 100%;
-      transition: background 0.15s;
+      transition: background .15s;
     }
-    .btn-download:hover { background: #6d28d9; }
+    .btn-dl:hover { background: var(--purple2); text-decoration: none; }
 
-    .btn-download svg { flex-shrink: 0; }
-
-    .req {
-      margin-top: 32px;
-      background: #1a1a38;
-      border: 1px solid #252545;
-      border-radius: 10px;
-      padding: 20px;
-      text-align: left;
-    }
-    .req h3 {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #64748b;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-    .req li {
-      list-style: none;
-      font-size: 0.9rem;
-      color: #94a3b8;
-      padding: 5px 0;
+    .divider {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      margin: 20px 0;
+      color: var(--muted);
+      font-size: 0.8rem;
     }
-    .req li::before {
+    .divider::before, .divider::after {
       content: '';
-      width: 7px; height: 7px;
-      background: #22c55e;
-      border-radius: 50%;
-      flex-shrink: 0;
+      flex: 1;
+      height: 1px;
+      background: var(--border);
     }
 
-    .steps {
-      margin-top: 20px;
-      text-align: left;
+    .terminal {
+      background: #06060f;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
     }
-    .steps h3 {
+    .terminal-bar {
+      background: #0e0e22;
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px solid var(--border);
+    }
+    .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .dot.r { background: #ef4444; }
+    .dot.y { background: #f59e0b; }
+    .dot.g { background: #22c55e; }
+    .terminal-title {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    .terminal-body {
+      padding: 14px 16px;
+      font-family: 'Cascadia Code', 'Fira Code', monospace;
+      font-size: 0.82rem;
+      color: var(--accent);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      transition: background .15s;
+    }
+    .terminal-body:hover { background: #0d0d20; }
+    .terminal-body .prompt { color: var(--green); margin-right: 8px; user-select: none; }
+    .terminal-cmd { flex: 1; word-break: break-all; }
+    .copy-btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--muted);
+      font-size: 0.7rem;
+      padding: 4px 10px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .15s;
+      flex-shrink: 0;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .copy-btn.copied { border-color: var(--green); color: var(--green); }
+    .terminal-hint {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    /* ── STEPS ── */
+    .section {
+      max-width: 580px;
+      margin: 0 auto 64px;
+      padding: 0 24px;
+    }
+    .section-title {
       font-size: 0.75rem;
       font-weight: 700;
-      color: #64748b;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      margin-bottom: 12px;
+      color: var(--muted);
+      margin-bottom: 20px;
     }
-    .step {
+
+    .steps { display: flex; flex-direction: column; gap: 12px; }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
       display: flex;
-      gap: 14px;
-      padding: 8px 0;
+      gap: 18px;
+      align-items: flex-start;
     }
     .step-num {
-      width: 24px; height: 24px;
-      background: #252545;
+      width: 32px; height: 32px;
+      background: var(--card);
+      border: 1px solid var(--border);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.75rem;
+      font-size: 0.85rem;
       font-weight: 700;
-      color: #818cf8;
+      color: var(--accent);
       flex-shrink: 0;
-      margin-top: 1px;
     }
-    .step p { font-size: 0.88rem; color: #94a3b8; line-height: 1.5; }
-    .step strong { color: #f1f5f9; }
+    .step-body { flex: 1; }
+    .step-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 4px;
+    }
+    .step-desc {
+      font-size: 0.88rem;
+      color: var(--soft);
+      line-height: 1.6;
+    }
+    .step-desc strong { color: var(--white); }
+    .step-desc a { color: var(--accent); }
 
-    .cmd {
-      background: #08080f;
-      border: 1px solid #252545;
-      border-radius: 8px;
-      padding: 10px 14px;
-      font-family: monospace;
-      font-size: 0.78rem;
-      color: #818cf8;
+    .step-tip {
+      margin-top: 10px;
+      background: var(--card);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      color: var(--soft);
+    }
+    .step-tip.warn { border-left-color: var(--yellow); }
+    .step-tip.ok   { border-left-color: var(--green); }
+
+    .iphone-steps {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .iphone-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.85rem;
+      color: var(--soft);
+    }
+    .iphone-step .arr { color: var(--accent); }
+
+    /* ── FAQ ── */
+    .faq { display: flex; flex-direction: column; gap: 8px; }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .faq-q {
+      padding: 14px 18px;
+      font-size: 0.9rem;
+      font-weight: 600;
       cursor: pointer;
-      margin-top: 8px;
-      word-break: break-all;
-      transition: border-color 0.15s;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      user-select: none;
     }
-    .cmd:hover { border-color: #818cf8; }
-    .cmd::after { content: '  📋'; font-size: 0.7rem; }
+    .faq-q:hover { background: var(--card); }
+    .faq-q .chevron { transition: transform .2s; color: var(--muted); }
+    .faq-q.open .chevron { transform: rotate(180deg); }
+    .faq-a {
+      display: none;
+      padding: 0 18px 14px;
+      font-size: 0.87rem;
+      color: var(--soft);
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+    }
+    .faq-a.open { display: block; }
 
-    .footer {
-      margin-top: 40px;
-      color: #334155;
-      font-size: 0.78rem;
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 32px 24px 48px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
     }
-    .footer a { color: #475569; text-decoration: none; }
-    .footer a:hover { color: #818cf8; }
+    footer a { color: var(--muted); }
+    footer a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <img src="icon.png" alt="iPogo" class="logo" />
+<!-- HERO -->
+<div class="hero">
+  <img src="icon.png" alt="iPogo"/>
   <h1>iPogo <span>Installer</span></h1>
-  <p class="subtitle">Instalador para Linux — sideload sem complicação</p>
-  <span class="badge">Linux x86_64 · Ubuntu / Debian</span>
-
-  <a class="btn-download"
-     href="https://github.com/vinicius-emanuel-costa/ipogo-installer/releases/latest/download/instalar.sh"
-     download>
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-         stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-      <polyline points="7 10 12 15 17 10"/>
-      <line x1="12" y1="15" x2="12" y2="3"/>
-    </svg>
-    Baixar Instalador
-  </a>
-
-  <div class="req">
-    <h3>Requisitos</h3>
-    <ul>
-      <li>Linux Ubuntu / Debian (x86_64)</li>
-      <li>Docker instalado</li>
-      <li>iPhone conectado via cabo USB</li>
-      <li>Apple ID (com ou sem 2FA)</li>
-    </ul>
+  <p>Instale o iPogo no seu iPhone direto do Linux — simples e rápido</p>
+  <div class="badges">
+    <span class="badge">Linux x86_64</span>
+    <span class="badge">Ubuntu / Debian</span>
+    <span class="badge">Com suporte a 2FA</span>
+    <span class="badge">Gratuito</span>
   </div>
+</div>
 
+<!-- DOWNLOAD -->
+<div class="dl-box">
+  <div class="dl-card">
+    <h2>Download</h2>
+
+    <a class="btn-dl" href="https://github.com/vinicius-emanuel-costa/ipogo-installer/releases/latest/download/instalar.sh" download>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Baixar instalar.sh
+    </a>
+
+    <div class="divider">ou instale direto pelo terminal</div>
+
+    <div class="terminal">
+      <div class="terminal-bar">
+        <div class="dot r"></div>
+        <div class="dot y"></div>
+        <div class="dot g"></div>
+        <span class="terminal-title">Terminal</span>
+      </div>
+      <div class="terminal-body" onclick="copyCmd(this)">
+        <span><span class="prompt">$</span><span class="terminal-cmd" id="maincmd">curl -fsSL https://github.com/vinicius-emanuel-costa/ipogo-installer/releases/latest/download/instalar.sh -o /tmp/instalar-ipogo.sh && bash /tmp/instalar-ipogo.sh</span></span>
+        <span class="copy-btn" id="copybtn1">Copiar</span>
+      </div>
+    </div>
+    <p class="terminal-hint">Clique no comando para copiar · Cola no terminal e aperta Enter</p>
+  </div>
+</div>
+
+<!-- PASSO A PASSO -->
+<div class="section">
+  <div class="section-title">Passo a passo</div>
   <div class="steps">
-    <h3>Como usar</h3>
-    <div class="step">
+
+    <div class="step-card">
       <div class="step-num">1</div>
-      <p>Abra o terminal e rode este comando:</p>
-      <div class="cmd" id="cmd1" onclick="copyCmd('cmd1')">bash &lt;(curl -fsSL https://github.com/vinicius-emanuel-costa/ipogo-installer/releases/latest/download/instalar.sh)</div>
-      <p style="margin-top:6px">Isso instala o app no menu de aplicativos automaticamente.</p>
+      <div class="step-body">
+        <div class="step-title">Instale o iPogo Installer no PC</div>
+        <div class="step-desc">Copie o comando acima, cole no terminal e aperte <strong>Enter</strong>.<br/>
+        O app vai aparecer no menu de aplicativos do GNOME automaticamente.</div>
+        <div class="step-tip ok">Só precisa fazer isso uma vez. Para atualizar o instalador, rode o mesmo comando.</div>
+      </div>
     </div>
-    <div class="step">
+
+    <div class="step-card">
       <div class="step-num">2</div>
-      <p>Conecte o iPhone, baixe o <strong>.ipa</strong> em <a href="https://ipogo.app" target="_blank" style="color:#818cf8">ipogo.app</a> e selecione na interface</p>
+      <div class="step-body">
+        <div class="step-title">Conecte o iPhone via cabo USB</div>
+        <div class="step-desc">
+          Conecte o cabo → desbloqueie o iPhone → se aparecer a mensagem <strong>"Confiar neste computador?"</strong>, toque em <strong>Confiar</strong>.
+        </div>
+        <div class="step-tip warn">Use um cabo original ou certificado MFi — cabos ruins causam falha na instalação.</div>
+      </div>
     </div>
-    <div class="step">
+
+    <div class="step-card">
       <div class="step-num">3</div>
-      <p>Digite seu <strong>Apple ID</strong> e senha. Se tiver 2FA, o código do iPhone aparece automaticamente</p>
+      <div class="step-body">
+        <div class="step-title">Baixe o arquivo IPA do iPogo</div>
+        <div class="step-desc">
+          Acesse <a href="https://ipogo.app" target="_blank">ipogo.app</a>, vá em <strong>Downloads</strong> e baixe a versão mais recente do <strong>.ipa</strong>.<br/><br/>
+          No iPogo Installer, arraste o arquivo para a interface <strong>ou</strong> cole a URL no campo e clique em <strong>Baixar</strong>.
+        </div>
+      </div>
     </div>
-    <div class="step">
+
+    <div class="step-card">
       <div class="step-num">4</div>
-      <p>No iPhone: <strong>Ajustes → Geral → VPN e Gerenciamento → Confiar</strong></p>
+      <div class="step-body">
+        <div class="step-title">Digite seu Apple ID</div>
+        <div class="step-desc">
+          Preencha seu <strong>email</strong> e <strong>senha</strong> da conta Apple.<br/>
+          Marque <em>"Lembrar credenciais"</em> para não precisar digitar toda vez.
+        </div>
+        <div class="step-tip">Se tiver verificação em 2 etapas ativada, o código vai aparecer automaticamente no iPhone — só digitar na janela que abrir.</div>
+      </div>
     </div>
+
+    <div class="step-card">
+      <div class="step-num">5</div>
+      <div class="step-body">
+        <div class="step-title">Clique em "Instalar iPogo"</div>
+        <div class="step-desc">
+          Aguarde a instalação — leva entre <strong>30 segundos e 2 minutos</strong>.<br/>
+          <strong>Não desconecte o cabo</strong> e mantenha o iPhone desbloqueado durante o processo.
+        </div>
+      </div>
+    </div>
+
+    <div class="step-card">
+      <div class="step-num">6</div>
+      <div class="step-body">
+        <div class="step-title">Confie no perfil — obrigatório no iPhone</div>
+        <div class="step-desc">Após instalar, o app aparece mas <strong>trava ao abrir</strong> até você confiar no perfil:</div>
+        <div class="iphone-steps">
+          <div class="iphone-step"><span class="arr">→</span> Ajustes</div>
+          <div class="iphone-step"><span class="arr">→</span> Geral</div>
+          <div class="iphone-step"><span class="arr">→</span> VPN e Gerenciamento de Dispositivo</div>
+          <div class="iphone-step"><span class="arr">→</span> Toque no seu Apple ID</div>
+          <div class="iphone-step"><span class="arr">→</span> <strong>Confiar → Confirmar</strong></div>
+        </div>
+        <div class="step-tip ok">Pronto! Abra o iPogo e aproveite.</div>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<div class="footer">
-  <a href="https://github.com/vinicius-emanuel-costa/ipogo-installer" target="_blank">GitHub</a>
-  &nbsp;·&nbsp; iPogo Installer by Vinícius Costa
+<!-- FAQ -->
+<div class="section">
+  <div class="section-title">Dúvidas frequentes</div>
+  <div class="faq">
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        iPhone não aparece como conectado
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Troque o cabo (use original ou certificado) → desbloqueie o iPhone → se aparecer "Confiar neste computador", confirme. Verifique também com <code>lsusb | grep Apple</code> no terminal.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Erro de autenticação com o Apple ID
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Verifique email e senha. Se tiver 2FA, aguarde o código aparecer automaticamente. Se o erro persistir, gere uma <strong>Senha de Aplicativo</strong> em <a href="https://appleid.apple.com" target="_blank">appleid.apple.com</a> e use ela como senha.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        O app instalou mas trava ao abrir
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Você precisa confiar no perfil — veja o <strong>Passo 6</strong> acima. Esse passo é obrigatório em toda instalação via sideload.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Saiu nova versão do iPogo — como atualizo?
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Baixe o novo <strong>.ipa</strong> em <a href="https://ipogo.app" target="_blank">ipogo.app</a>, abra o iPogo Installer, selecione o novo arquivo e instale normalmente. O app antigo é substituído automaticamente.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        O iPogo para de funcionar depois de alguns dias
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Apps instalados via sideload expiram a cada <strong>7 dias</strong> (conta gratuita) ou <strong>1 ano</strong> (conta de desenvolvedor paga). Basta reinstalar com o mesmo processo — não precisa baixar o IPA novamente.
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q" onclick="toggleFaq(this)">
+        Erro "Anisette falhou" ou timeout
+        <svg class="chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="faq-a">
+        Rode no terminal: <code>docker restart anisette</code> → aguarde 10 segundos → tente instalar novamente.
+      </div>
+    </div>
+
+  </div>
 </div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="https://github.com/vinicius-emanuel-costa/ipogo-installer" target="_blank">GitHub</a>
+  &nbsp;·&nbsp;
+  <a href="https://github.com/vinicius-emanuel-costa/ipogo-installer/releases" target="_blank">Releases</a>
+  &nbsp;·&nbsp;
+  <a href="https://ipogo.app" target="_blank">ipogo.app</a>
+  <br/><br/>
+  iPogo Installer · Vinícius Costa
+</footer>
 
 <script>
-function copyCmd(id) {
-  const el = document.getElementById(id);
-  const text = el.innerText.replace('  📋','').trim();
-  navigator.clipboard.writeText(text).then(() => {
-    el.style.borderColor = '#22c55e';
-    el.style.color = '#22c55e';
-    setTimeout(() => {
-      el.style.borderColor = '';
-      el.style.color = '';
-    }, 1200);
-  });
-}
+  function copyCmd(el) {
+    const cmd = el.querySelector('.terminal-cmd').innerText;
+    navigator.clipboard.writeText(cmd).then(() => {
+      const btn = el.querySelector('.copy-btn');
+      btn.textContent = 'Copiado!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copiar'; btn.classList.remove('copied'); }, 1500);
+    });
+  }
+
+  function toggleFaq(el) {
+    el.classList.toggle('open');
+    const ans = el.nextElementSibling;
+    ans.classList.toggle('open');
+  }
 </script>
+
 </body>
 </html>
