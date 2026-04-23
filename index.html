@@ -146,6 +146,22 @@
     .step p { font-size: 0.88rem; color: #94a3b8; line-height: 1.5; }
     .step strong { color: #f1f5f9; }
 
+    .cmd {
+      background: #08080f;
+      border: 1px solid #252545;
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: #818cf8;
+      cursor: pointer;
+      margin-top: 8px;
+      word-break: break-all;
+      transition: border-color 0.15s;
+    }
+    .cmd:hover { border-color: #818cf8; }
+    .cmd::after { content: '  📋'; font-size: 0.7rem; }
+
     .footer {
       margin-top: 40px;
       color: #334155;
@@ -189,9 +205,9 @@
     <h3>Como usar</h3>
     <div class="step">
       <div class="step-num">1</div>
-      <p>Baixe o <strong>instalar.sh</strong> acima, abra o terminal na pasta e rode:<br/>
-      <strong>bash instalar.sh</strong><br/>
-      Isso instala o app no menu de aplicativos automaticamente.</p>
+      <p>Abra o terminal e rode este comando:</p>
+      <div class="cmd" id="cmd1" onclick="copyCmd('cmd1')">bash &lt;(curl -fsSL https://github.com/vinicius-emanuel-costa/ipogo-installer/releases/latest/download/instalar.sh)</div>
+      <p style="margin-top:6px">Isso instala o app no menu de aplicativos automaticamente.</p>
     </div>
     <div class="step">
       <div class="step-num">2</div>
@@ -213,5 +229,19 @@
   &nbsp;·&nbsp; iPogo Installer by Vinícius Costa
 </div>
 
+<script>
+function copyCmd(id) {
+  const el = document.getElementById(id);
+  const text = el.innerText.replace('  📋','').trim();
+  navigator.clipboard.writeText(text).then(() => {
+    el.style.borderColor = '#22c55e';
+    el.style.color = '#22c55e';
+    setTimeout(() => {
+      el.style.borderColor = '';
+      el.style.color = '';
+    }, 1200);
+  });
+}
+</script>
 </body>
 </html>
